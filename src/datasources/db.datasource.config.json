@@ -1,6 +1,9 @@
 {
   "name": "db",
-  "connector": "memory",
-  "localStorage": "",
-  "file": ""
+  "connector": "mysql",
+  "hostname": "localhost",
+  "port": "3306",
+  "user": "root",
+  "password": "",
+  "database": "loopback"
 }

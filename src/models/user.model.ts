@@ -1,7 +1,8 @@
-import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
+import {Entity, model, property} from '@loopback/repository';
 
 
 @model({
+  name: 'users',
   settings: {
     indexes: {
       uniqueEmail: {
@@ -17,17 +18,17 @@ import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
 })
 export class User extends Entity {
   @property({
-    type: 'string',
+    type: 'number',
     id: true,
   })
-  id: string;
+  id: number;
 
   @property({
     type: 'string',
     required: true,
   })
   email: string;
-  
+
   @property({
     type: 'string',
     required: true,

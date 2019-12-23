@@ -1,5 +1,6 @@
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig, BindingKey} from '@loopback/core';
+
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -8,30 +9,34 @@ import {
 import {
   TokenServiceBindings,
   UserServiceBindings,
+  PasswordHasherBindings,
   TokenServiceConstants,
 } from './keys';
 
-
+import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTService} from './services/jwt-service';
 import {MyUserService} from './services/user-service';
-
 
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
+
 import path from 'path';
+
 import {
   AuthenticationComponent,
   registerAuthenticationStrategy,
 } from '@loopback/authentication';
 
-import {MySequence, MyAuthenticationSequence} from './sequence';
+import {MyAuthenticationSequence} from './sequence';
 
 import {SECURITY_SCHEME_SPEC} from './utils/security-spec';
 
 import {
   JWTAuthenticationStrategy
 } from './authentication-strategies/jwt-strategy';
+
+import {DbDataSource} from './datasources';
 
 export interface PackageInfo {
   name: string;
@@ -59,19 +64,14 @@ export class Dopelista extends BootMixin(
 
     this.setUpBindings();
 
-    // Bind authentication component related elements
     this.component(AuthenticationComponent);
 
-    // authentication
     registerAuthenticationStrategy(this, JWTAuthenticationStrategy);
 
-    // Set up the custom sequence
     this.sequence(MyAuthenticationSequence);
 
-    // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
 
-    // Customize @loopback/rest-explorer configuration here
     this.bind(RestExplorerBindings.CONFIG).to({
       path: '/explorer',
     });
@@ -79,10 +79,9 @@ export class Dopelista extends BootMixin(
     this.component(RestExplorerComponent);
 
     this.projectRoot = __dirname;
-    // Customize @loopback/boot Booter Conventions here
+
     this.bootOptions = {
       controllers: {
-        // Customize ControllerBooter Conventions here
         dirs: ['controllers'],
         extensions: ['.controller.js'],
         nested: true,
@@ -91,7 +90,6 @@ export class Dopelista extends BootMixin(
   }
 
   setUpBindings(): void {
-    // Bind package.json to the application context
     this.bind(PackageKey).to(pkg);
 
     this.bind(TokenServiceBindings.TOKEN_SECRET).to(
@@ -106,5 +104,9 @@ export class Dopelista extends BootMixin(
 
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
 
+    this.bind(PasswordHasherBindings.ROUNDS).to(10);
+    this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
+
+    this.bind('datasources.db').toClass(DbDataSource);
   }
 }

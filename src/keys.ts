@@ -1,5 +1,5 @@
 import {BindingKey} from '@loopback/context';
-//import {PasswordHasher} from './services/hash.password.bcryptjs';
+import {PasswordHasher} from './services/hash.password.bcryptjs';
 import {TokenService, UserService} from '@loopback/authentication';
 import {User, Credentials} from './types';
 
@@ -20,12 +20,12 @@ export namespace TokenServiceBindings {
   );
 }
 
-// export namespace PasswordHasherBindings {
-//   export const PASSWORD_HASHER = BindingKey.create<PasswordHasher>(
-//     'services.hasher',
-//   );
-//   export const ROUNDS = BindingKey.create<number>('services.hasher.round');
-// }
+export namespace PasswordHasherBindings {
+  export const PASSWORD_HASHER = BindingKey.create<PasswordHasher>(
+    'services.hasher',
+  );
+  export const ROUNDS = BindingKey.create<number>('services.hasher.round');
+}
 
 export namespace UserServiceBindings {
   export const USER_SERVICE = BindingKey.create<UserService<User, Credentials>>(
