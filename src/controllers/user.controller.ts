@@ -42,6 +42,9 @@ import {validateCredentials} from '../validations/user-validation';
 import { UserRepository } from '../repositories/user.repository';
 import { User } from '../models/user.model';
 
+
+import {RegistrationMail} from '../mails';
+
 const GET_USER_RESPONSE: ResponseObject = {
   description: 'User Response',
   content: {
@@ -172,6 +175,9 @@ export class UserController {
     },
   })
   async createUser(
+    @inject('registration.mail')
+    registrationMail: RegistrationMail,
+
     @requestBody({
       content: {
         'application/json': {
@@ -183,7 +189,7 @@ export class UserController {
   ): Promise<User> {
     const credentials =_.pick(newUserRequest,['email','password','name']);
     validateCredentials(credentials)
-    const {email} = credentials;
+    const {email, name} = credentials;
     const userExist = await this.repository.findOne({
       where: {email}
     });
@@ -192,6 +198,11 @@ export class UserController {
       newUserRequest.password,
     );
     const newUser = await this.repository.create({...newUserRequest, password});
+
+    registrationMail.send({
+      email,
+      name
+    });
     return newUser;
   }
 }

@@ -1,23 +1,19 @@
 import Mail from './mail';
 
 export class RegistrationMail extends Mail {
-  send() {
-    console.log("Called to send");
+  send(userObject: { email: string; name: string; }) {
+    
+    const {email, name} = userObject;
     const message = {
-        from: 'elonmusk@tesla.com', // Sender address
-        to: 'to@email.com',         // List of recipients
-        subject: 'Design Your Model S | Tesla', // Subject line
-        text: 'Have the most fun you can in a car. Get your Tesla today!' // Plain text body
+        from: 'support@dopelista.com',
+        to: email,
+        subject: 'Account Creation On DopeLista',
+        html: `<h1 style="color: darkslategrey;font-style: italic"> Hello ${name}, Welcome to Doplista </h1>` // Plain text body
     };
 
-    return this.getTransport().sendMail(message, function(
-        err: object|null,
-        info: string|null
-    ) {
+    this.getTransport().sendMail(message, function( err: object|null ) {
         if (err) {
-          console.log(err)
-        } else {
-          console.log(info);
+          console.log('An occured sending email', err);
         }
     });
   }

@@ -1,6 +1,11 @@
 const nodemailer = require('nodemailer');
 
-export default class Mail {
+interface MailInterface {
+  getTransport?: object;
+  send?: void
+}
+
+export default class Mail implements MailInterface {
     getTransport() {
       return nodemailer.createTransport({
           host: 'smtp.mailtrap.io',
