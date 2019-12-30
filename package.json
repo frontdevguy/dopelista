@@ -61,6 +61,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "loopback-connector-mysql": "^5.4.2",
+    "nodemailer": "^6.4.2",
     "util": "^0.12.1"
   },
   "devDependencies": {

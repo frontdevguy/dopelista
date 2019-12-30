@@ -1,38 +1,37 @@
 import {
-Request , RestBindings, get, ResponseObject, param
+  Request,
+  RestBindings,
+  get,
+  ResponseObject,
 } from '@loopback/rest';
 
 import {inject} from '@loopback/context';
 
+import {RegistrationMail} from '../mails';
+
 const SEARCH_RESPONSE: ResponseObject = {
-  description: 'Search Response',
-  content: {
-    'application/json': {
-      schema: {
-        type: 'object',
-        properties: {
-          name: {type: 'string'},
-        },
-      },
-    },
-  },
+  description: 'Search Response'
 };
 
 export class SearchController {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mail: any;
   constructor(
-    @inject(RestBindings.Http.REQUEST) private req: Request
+    @inject(RestBindings.Http.REQUEST)
+    private req: Request,
   ) {}
 
-
-
-  @get('/search/{name}', {
+  @get('/search', {
     responses: {
       '200': SEARCH_RESPONSE,
     },
   })
   search(
-    @param.path.string('name') name: string
-  ): object {
-    return { name }
+    name: string,
+    @inject('registration.mail')
+    mail: RegistrationMail,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): any {
+    return mail.send();
   }
 }

@@ -38,6 +38,8 @@ import {
 
 import {DbDataSource} from './datasources';
 
+import {RegistrationMail} from './mails';
+
 export interface PackageInfo {
   name: string;
   version: string;
@@ -108,5 +110,6 @@ export class Dopelista extends BootMixin(
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
 
     this.bind('datasources.db').toClass(DbDataSource);
+    this.bind('registration.mail').toClass(RegistrationMail);
   }
 }
